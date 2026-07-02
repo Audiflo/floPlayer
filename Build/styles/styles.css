@@ -1,25 +1,80 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    line-height: 1.6;
-}
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #374151; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4B5563; }
 
-button {
-    background: #2196f3;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-}
+        /* Sliders */
+        input[type=range] {
+            -webkit-appearance: none;
+            background: transparent;
+            height: 4px;
+            cursor: pointer;
+            border-radius: 2px;
+        }
+        
+        input[type=range]::-webkit-slider-runnable-track {
+            height: 4px;
+            background: #4b5563;
+            border-radius: 2px;
+        }
+        
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 12px;
+            width: 12px;
+            border-radius: 50%;
+            background: #fff;
+            margin-top: -4px;
+            opacity: 0;
+            transition: opacity 0.1s;
+        }
 
-button:hover {
-    background: #1976d2;
-}
+        .group:hover input[type=range]::-webkit-slider-thumb,
+        input[type=range]:hover::-webkit-slider-thumb {
+            opacity: 1;
+        }
 
-.square {
-  width: 100px;
-  height: 100px;
-  background-color: blue;
-}
+        /* Lyrics Styles */
+        .lyric-line {
+            opacity: 0.5;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: left center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+        .lyric-line:hover { opacity: 0.8; }
+        
+        .lyric-active {
+            opacity: 1;
+            font-size: 2rem;
+            font-weight: 800;
+            color: #fff;
+            transform: scale(1.02);
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Active States */
+        .btn-active {
+            color: #60A5FA !important;
+            position: relative;
+        }
+        .btn-active-dot::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background-color: #60A5FA;
+            border-radius: 50%;
+        }
+
+        .like-active { color: #22c55e !important; }
+        .nav-active { color: #fff !important; font-weight: 700; opacity: 1 !important; }
+        .track-row:hover { background-color: rgba(255,255,255,0.1); }
