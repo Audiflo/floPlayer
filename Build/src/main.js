@@ -5,7 +5,7 @@ import init, { decode, info, get_metadata, get_cover_art, get_synced_lyrics } fr
 // Keep
 const updater = Updato.init(
   {
-    repo: "NellowTCS/Web-Template",
+    repo: "Audiflo/floPlayer",
     mode: "version",
     current: "0.1.0",
   },
