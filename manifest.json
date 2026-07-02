@@ -1,0 +1,28 @@
+{
+  "app": "floPlayer",
+  "mode": "version",
+  "latest": "0.1.0",
+  "files": [
+    "apple-touch-icon-180x180.png",
+    "assets/index-FOi4kX9Q.css",
+    "assets/index-bvylKMQf.js",
+    "assets/index-bvylKMQf.js.map",
+    "favicon.ico",
+    "favicon.png",
+    "index.html",
+    "manifest.webmanifest",
+    "maskable-icon-512x512.png",
+    "pwa-192x192.png",
+    "pwa-512x512.png",
+    "pwa-64x64.png",
+    "registerSW.js",
+    "sw.js",
+    "sw.js.map",
+    "workbox-57884417.js",
+    "workbox-57884417.js.map"
+  ],
+  "modules": [
+    "assets/index-bvylKMQf.js"
+  ],
+  "timestamp": 1783014130
+}

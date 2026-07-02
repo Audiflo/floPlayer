@@ -1,0 +1,2 @@
+# cdn
+Updato CDN artifacts
