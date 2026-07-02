@@ -1,0 +1,31 @@
+name: Updato CDN
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Build
+        working-directory: Build
+        run: npm ci && npm run build
+
+      - name: Read version
+        id: version
+        run: echo "version=$(node -p "require('./Build/package.json').version")" >> "$GITHUB_OUTPUT"
+
+      - uses: NellowTCS/updato@1.0.3
+        with:
+          mode: version
+          dist_dir: Build/dist
+          version: ${{ steps.version.outputs.version }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
