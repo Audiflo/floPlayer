@@ -37,8 +37,8 @@ export default defineConfig(({ mode }) => {
           registerType: 'autoUpdate',
           includeAssets: ['robots.txt'],
           manifest: {
-            name: 'Web-Template',
-            short_name: 'Web-Template',
+            name: 'floPlayer',
+            short_name: 'floPlayer',
             start_url: './',
             display: 'standalone',
             theme_color: '#00bfff',
