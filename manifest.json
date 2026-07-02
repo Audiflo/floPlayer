@@ -4,9 +4,9 @@
   "latest": "0.1.0",
   "files": [
     "apple-touch-icon-180x180.png",
+    "assets/index-CE8jMu_C.js",
+    "assets/index-CE8jMu_C.js.map",
     "assets/index-FOi4kX9Q.css",
-    "assets/index-bvylKMQf.js",
-    "assets/index-bvylKMQf.js.map",
     "favicon.ico",
     "favicon.png",
     "index.html",
@@ -22,7 +22,7 @@
     "workbox-57884417.js.map"
   ],
   "modules": [
-    "assets/index-bvylKMQf.js"
+    "assets/index-CE8jMu_C.js"
   ],
-  "timestamp": 1783014130
+  "timestamp": 1783014683
 }
