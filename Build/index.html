@@ -1,17 +1,238 @@
-<!DOCTYPE html>
-<html>
 
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>My Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flo™ Player</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" data-inline="true" href="./styles/styles.css" />
 </head>
+<body class="bg-black text-white h-screen flex flex-col overflow-hidden selection:bg-blue-500 selection:text-white">
 
-<body>
+    <div class="flex-1 flex overflow-hidden">
+        
+        <!-- Sidebar -->
+        <aside class="w-64 bg-black flex flex-col gap-6 p-6 hidden md:flex shrink-0 z-20">
+            <!-- Logo -->
+            <div class="flex items-center gap-2 mb-2">
+                <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                    <i class="fa-solid fa-wave-square text-white text-sm"></i>
+                </div>
+                <span class="text-xl font-bold tracking-tight">flo™ Player</span>
+            </div>
+
+            <!-- Nav -->
+            <nav class="flex flex-col gap-4">
+                <button id="nav-home" onclick="changeView('overview')" class="flex items-center gap-4 text-white font-bold opacity-100 transition-opacity text-left nav-active">
+                    <i class="fa-solid fa-house text-lg w-6"></i> Home
+                </button>
+                <button id="nav-search" onclick="changeView('library', true)" class="flex items-center gap-4 text-gray-400 hover:text-white transition-colors font-medium text-left">
+                    <i class="fa-solid fa-magnifying-glass text-lg w-6"></i> Search
+                </button>
+                <button id="nav-library" onclick="changeView('library')" class="flex items-center gap-4 text-gray-400 hover:text-white transition-colors font-medium text-left">
+                    <i class="fa-solid fa-lines-leaning text-lg w-6"></i> Your Library
+                </button>
+            </nav>
+
+            <div class="mt-4 pt-4 border-t border-gray-800">
+                <button onclick="document.getElementById('file-input').click()" class="flex items-center gap-4 text-gray-400 hover:text-white transition-colors group text-left w-full">
+                    <div class="w-6 h-6 bg-gray-300 group-hover:bg-white text-black flex items-center justify-center rounded-sm transition-colors">
+                        <i class="fa-solid fa-plus text-xs"></i>
+                    </div>
+                    <span class="font-bold text-sm">Add Files</span>
+                </button>
+            </div>
+            
+            <!-- Tech Specs -->
+            <div class="mt-auto bg-gray-900/50 p-3 rounded text-xs text-gray-500 font-mono border border-gray-800">
+                <div class="mb-1 font-bold text-gray-400">STREAM INFO</div>
+                <div class="flex justify-between"><span>Rate:</span> <span id="meta-rate" class="text-blue-400">-</span></div>
+                <div class="flex justify-between"><span>Ch:</span> <span id="meta-channels" class="text-blue-400">-</span></div>
+                <div class="flex justify-between"><span>Type:</span> <span id="meta-type" class="text-blue-400">-</span></div>
+                <div class="flex justify-between"><span>Size:</span> <span id="meta-size" class="text-blue-400">-</span></div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="flex-1 bg-gradient-to-b from-blue-900/40 via-[#121212] to-black overflow-hidden relative flex flex-col">
+            
+            <!-- Mobile Header -->
+            <header class="absolute top-0 left-0 right-0 z-30 flex justify-between items-center p-4 md:p-6 pointer-events-none md:hidden">
+                <div class="flex items-center gap-2 pointer-events-auto">
+                     <div class="w-8 h-8 bg-blue-600 rounded flex items-center justify-center">
+                        <i class="fa-solid fa-wave-square text-white"></i>
+                    </div>
+                    <span class="font-bold">flo™</span>
+                </div>
+                <div class="ml-auto flex gap-4 pointer-events-auto">
+                    <button onclick="document.getElementById('file-input').click()" class="bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg">
+                        Add
+                    </button>
+                </div>
+            </header>
+
+            <!-- Background Visualizer -->
+            <canvas id="visualizer" class="absolute bottom-0 left-0 w-full h-full opacity-20 pointer-events-none mix-blend-screen z-0"></canvas>
+
+            <!-- Scrollable Content Container -->
+            <div class="flex-1 overflow-y-auto z-10 scroll-smooth relative" id="main-scroll-area">
+                
+                <!-- VIEW 1: Overview (Hero + Now Playing) -->
+                <div id="view-overview" class="px-6 pb-24 pt-20 max-w-7xl mx-auto transition-opacity duration-300">
+                    <div class="flex flex-col md:flex-row items-end gap-6 mt-4 mb-8">
+                        <!-- Cover Art -->
+                        <div id="cover-art-container" class="relative group shrink-0 w-52 h-52 md:w-64 md:h-64 shadow-[0_20px_50px_rgba(0,0,0,0.5)] bg-[#282828] flex items-center justify-center rounded-lg overflow-hidden transition-transform duration-500 hover:scale-[1.02]">
+                            <i id="cover-icon" class="fa-solid fa-music text-6xl text-gray-500"></i>
+                            <img id="cover-img" class="hidden w-full h-full object-cover" alt="Album Art">
+                        </div>
+
+                        <!-- Text Info -->
+                        <div class="flex flex-col gap-2 z-10 w-full overflow-hidden pb-2">
+                            <span class="uppercase tracking-widest text-xs font-bold text-white/80">Single</span>
+                            <h1 id="track-title" class="text-4xl md:text-6xl lg:text-7xl font-black tracking-tight text-white line-clamp-2 leading-tight">
+                                No Track
+                            </h1>
+                            <div class="flex items-center gap-2 text-sm md:text-base text-gray-300 font-medium mt-1">
+                                <span id="track-artist" class="text-white hover:underline cursor-pointer">Unknown Artist</span>
+                                <span class="w-1 h-1 bg-white rounded-full"></span>
+                                <span id="track-album" class="hover:underline cursor-pointer">Unknown Album</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="flex items-center gap-6 mb-8 border-b border-white/10 pb-6">
+                        <button id="btn-play-hero" class="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center hover:scale-105 hover:bg-blue-400 transition-all shadow-xl text-black pl-1">
+                            <i id="play-icon-hero" class="fa-solid fa-play text-2xl"></i>
+                        </button>
+                        <button id="btn-like-hero" class="text-gray-400 hover:text-white transition-colors transform active:scale-90"><i class="fa-regular fa-heart text-3xl"></i></button>
+                        <button class="text-gray-400 hover:text-white transition-colors"><i class="fa-solid fa-ellipsis text-3xl"></i></button>
+                    </div>
+
+                    <!-- Up Next Preview -->
+                    <div class="space-y-1">
+                        <h2 class="text-xl font-bold mb-4">Up Next</h2>
+                        <div id="queue-preview-list" class="space-y-1">
+                            <div class="px-4 py-8 text-center text-gray-500 text-sm">Queue is empty.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: Library & Search -->
+                <div id="view-library" class="hidden px-6 pb-24 pt-8 max-w-7xl mx-auto h-full flex flex-col">
+                    <!-- Search Header -->
+                    <div class="sticky top-0 bg-[#121212]/95 backdrop-blur z-20 pb-4 border-b border-white/10 mb-4 pt-10 md:pt-0">
+                        <div class="flex items-center justify-between mb-4">
+                            <h1 class="text-3xl font-bold">Your Library</h1>
+                            <span id="lib-count" class="text-gray-400 text-sm">0 songs</span>
+                        </div>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                            <input id="search-input" type="text" placeholder="Search in library..." class="w-full md:w-96 bg-[#282828] text-white rounded-full py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-white/20">
+                        </div>
+                    </div>
+                    
+                    <!-- Headers -->
+                    <div class="grid grid-cols-[auto_1fr_1fr_1fr_auto] gap-4 text-gray-400 text-sm px-4 py-2 border-b border-white/10 sticky top-[100px] bg-[#121212] z-10 hidden md:grid">
+                        <span class="w-8">#</span>
+                        <span>Title</span>
+                        <span>Album</span>
+                        <span>Date Added</span>
+                        <span class="text-right"><i class="fa-regular fa-clock"></i></span>
+                    </div>
+
+                    <!-- Library List -->
+                    <div id="library-list" class="space-y-1 mt-2">
+                        <div class="px-4 py-20 text-center text-gray-500">
+                            <i class="fa-solid fa-music text-4xl mb-4 opacity-50"></i>
+                            <p>Your library is empty.</p>
+                            <button onclick="document.getElementById('file-input').click()" class="mt-4 text-white font-bold hover:underline">Import files</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 3: Full Screen Lyrics -->
+                <div id="view-lyrics" class="hidden absolute inset-0 z-20 bg-black/60 backdrop-blur-sm pt-20 pb-24 px-6 md:px-20 overflow-y-auto scroll-smooth">
+                    <div id="lyrics-content" class="max-w-4xl mx-auto space-y-6 flex flex-col min-h-full">
+                         <!-- Content injected here -->
+                    </div>
+                </div>
+
+                <!-- VIEW 4: Full Queue -->
+                <div id="view-queue" class="hidden absolute inset-0 z-20 bg-black/95 pt-20 pb-24 px-6 md:px-20 overflow-y-auto">
+                    <h2 class="text-2xl font-bold mb-6">Queue</h2>
+                    <div id="queue-full-list" class="space-y-1">
+                        <!-- Dynamic Queue Items -->
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Player Footer (Fixed) -->
+    <footer class="h-24 bg-[#181818] border-t border-[#282828] grid grid-cols-3 px-4 z-50 relative">
+        
+        <!-- Left: Current Track Info -->
+        <div class="flex items-center gap-4 min-w-0">
+            <div class="w-14 h-14 bg-[#282828] rounded overflow-hidden shrink-0 hidden md:block relative group">
+                 <img id="footer-cover" class="hidden w-full h-full object-cover">
+                 <div id="footer-icon" class="w-full h-full flex items-center justify-center text-gray-500"><i class="fa-solid fa-music"></i></div>
+            </div>
+            <div class="flex flex-col justify-center overflow-hidden">
+                <div id="footer-title" class="text-sm font-semibold text-white truncate hover:underline cursor-pointer">No Track Loaded</div>
+                <div id="footer-artist" class="text-xs text-gray-400 truncate hover:underline cursor-pointer hover:text-white">Select a file</div>
+            </div>
+            <button id="btn-like-footer" class="text-gray-400 hover:text-white ml-2 hidden sm:block transform active:scale-90"><i class="fa-regular fa-heart text-sm"></i></button>
+        </div>
+
+        <!-- Center: Controls -->
+        <div class="flex flex-col items-center justify-center gap-1 max-w-xl w-full mx-auto">
+            <!-- Buttons -->
+            <div class="flex items-center gap-6 text-gray-400">
+                <button id="btn-shuffle" class="hover:text-white transition-colors" title="Shuffle"><i class="fa-solid fa-shuffle text-sm"></i></button>
+                <button id="btn-prev" class="hover:text-white transition-colors text-white" disabled><i class="fa-solid fa-backward-step text-lg"></i></button>
+                
+                <button id="btn-play" class="w-8 h-8 bg-white rounded-full flex items-center justify-center text-black hover:scale-105 transition-transform disabled:opacity-50" disabled>
+                    <i id="play-icon" class="fa-solid fa-play text-sm pl-0.5"></i>
+                </button>
+
+                <button id="btn-next" class="hover:text-white transition-colors text-white" disabled><i class="fa-solid fa-forward-step text-lg"></i></button>
+                <button id="btn-repeat" class="hover:text-white transition-colors" title="Repeat"><i class="fa-solid fa-repeat text-sm"></i></button>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="w-full flex items-center gap-2 text-xs font-mono text-gray-400 group">
+                <span id="current-time" class="min-w-[35px] text-right">0:00</span>
+                <div class="relative flex-grow h-1 bg-gray-600 rounded-full cursor-pointer" id="progress-container">
+                    <div id="progress-bar" class="absolute top-0 left-0 h-full bg-blue-500 rounded-full w-0 group-hover:bg-blue-400"></div>
+                    <div id="progress-handle" class="absolute top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full opacity-0 group-hover:opacity-100 shadow-md ml-[-6px]" style="left: 0%"></div>
+                </div>
+                <span id="total-time" class="min-w-[35px]">0:00</span>
+            </div>
+        </div>
+
+        <!-- Right: Volume & Extra -->
+        <div class="flex items-center justify-end gap-3 text-gray-400">
+             <button id="btn-lyrics" class="hover:text-white transition-colors" title="Lyrics"><i class="fa-solid fa-microphone-lines text-sm"></i></button>
+             <button id="btn-queue" class="hover:text-white transition-colors" title="Queue"><i class="fa-solid fa-list text-sm"></i></button>
+             <div class="flex items-center gap-2 w-24 md:w-32 group">
+                <button id="btn-mute" class="hover:text-white"><i id="vol-icon" class="fa-solid fa-volume-high text-sm"></i></button>
+                <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.8" class="w-full h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer accent-blue-500 group-hover:accent-blue-400">
+             </div>
+        </div>
+    </footer>
+
+    <input type="file" id="file-input" accept=".flo" multiple class="hidden">
+    <div id="drop-zone" class="fixed inset-0 bg-blue-600/90 z-[100] hidden flex-col items-center justify-center text-white backdrop-blur-md">
+        <i class="fa-solid fa-compact-disc text-8xl mb-6 animate-spin"></i>
+        <h2 class="text-4xl font-black">Drop to Import</h2>
+    </div>
+    
     <script type="module" data-inline="true" src="./src/main.js"></script>
-    <h1>Hello, world!</h1>
-    <p>This is a demo page.</p>
-    <button onclick="testFunction()">Click me!</button>
-    <button onclick="outputToPage()">Show a square.</button>
+    
 </body>
-
 </html>
