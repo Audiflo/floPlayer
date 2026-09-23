@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/NellowTCS/Web-Template#readme",
   "dependencies": {
-    "@nellowtcs/updato": "^1.0.1",
+    "@nellowtcs/updato": "^1.0.3",
     "vite": "^8.0.16"
   },
   "devDependencies": {
