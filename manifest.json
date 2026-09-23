@@ -5,8 +5,8 @@
   "files": [
     "apple-touch-icon-180x180.png",
     "assets/index-C9lpS4qW.css",
-    "assets/index-UNNOYz3j.js",
-    "assets/index-UNNOYz3j.js.map",
+    "assets/index-h5YhQsI2.js",
+    "assets/index-h5YhQsI2.js.map",
     "favicon.ico",
     "favicon.png",
     "index.html",
@@ -22,7 +22,7 @@
     "workbox-57884417.js.map"
   ],
   "modules": [
-    "assets/index-UNNOYz3j.js"
+    "assets/index-h5YhQsI2.js"
   ],
-  "timestamp": 1790134972
+  "timestamp": 1790135376
 }
