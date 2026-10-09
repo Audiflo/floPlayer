@@ -22,7 +22,7 @@
   "homepage": "https://github.com/NellowTCS/Web-Template#readme",
   "dependencies": {
     "@nellowtcs/updato": "^1.0.3",
-    "vite": "^8.3.1"
+    "vite": "^8.3.2"
   },
   "devDependencies": {
     "@vite-pwa/assets-generator": "^1.0.4",
